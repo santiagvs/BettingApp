@@ -1,10 +1,11 @@
 using System.Data;
+using BettingApp.Domain.Interfaces.Repositories;
 using BettingApp.Domain.Models;
 using Dapper;
 
 namespace BettingApp.Infrastructure.Repositories
 {
-    public class AccountRepository(IDbConnection connection)
+    public class AccountRepository(IDbConnection connection) : IAccountRepository
     {
         private readonly IDbConnection _connection = connection;
 

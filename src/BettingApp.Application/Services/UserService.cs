@@ -1,9 +1,10 @@
 using BettingApp.Domain.Interfaces.Repositories;
+using BettingApp.Domain.Interfaces.Services;
 using BettingApp.Domain.Models;
 
 namespace BettingApp.Application.Services
 {
-    public class UserService(IUserRepository userRepository)
+    public class UserService(IUserRepository userRepository) : IUserService
     {
         private readonly IUserRepository _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
 

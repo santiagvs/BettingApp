@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using BettingApp.Domain.Models;
 using BettingApp.Domain.Interfaces.Services;
+using Mapster;
+using BettingApp.Domain.DTO;
 
 namespace BettingApp.Api.Controllers
 {
@@ -16,12 +18,10 @@ namespace BettingApp.Api.Controllers
         {
             var user = await _userService.GetByIdAsync(id);
             if (user == null)
-            {
-                _logger.LogWarning($"User with ID {id} not found.");
                 return NotFound();
-            }
 
-            return Ok(user);
+            var userDto = user.Adapt<UserDTO>();
+            return Ok(userDto);
         }
 
         [HttpPost]
