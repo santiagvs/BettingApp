@@ -1,5 +1,7 @@
 using System.Data;
 using BettingApp.Application.Services;
+using BettingApp.Domain.Interfaces.InfraServices;
+using BettingApp.Infrastructure.InfraServices;
 using BettingApp.Domain.Interfaces.Repositories;
 using BettingApp.Domain.Interfaces.Services;
 using BettingApp.Infrastructure.Repositories;
@@ -18,6 +20,8 @@ namespace BettingApp.Api.Config
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IBetRepository, BetRepository>();
             services.AddTransient<IBetService, BetService>();
+            services.AddTransient<IPasswordHasher, BcryptPasswordHasher>();
+            services.AddTransient<IAuthService, AuthService>();
             return services;
         }
     }

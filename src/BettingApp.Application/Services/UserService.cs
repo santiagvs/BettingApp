@@ -1,12 +1,14 @@
+using BettingApp.Domain.Interfaces.InfraServices;
 using BettingApp.Domain.Interfaces.Repositories;
 using BettingApp.Domain.Interfaces.Services;
 using BettingApp.Domain.Models;
 
 namespace BettingApp.Application.Services
 {
-    public class UserService(IUserRepository userRepository) : IUserService
+    public class UserService(IUserRepository userRepository, IPasswordHasher passwordHasher) : IUserService
     {
         private readonly IUserRepository _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+        private readonly IPasswordHasher _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
 
         public async Task<User?> GetByIdAsync(Guid id)
         {
@@ -15,31 +17,36 @@ namespace BettingApp.Application.Services
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            // Implementação futura: retornar todos os usuários
-            throw new NotImplementedException();
+            return await _userRepository.GetAllAsync();
         }
 
         public async Task CreateAsync(User user)
         {
+            ArgumentNullException.ThrowIfNull(user);
+
+            if (user.Id == null) user.Id = Guid.NewGuid();
+
+            if (!string.IsNullOrWhiteSpace(user.PasswordHash))
+                    user.PasswordHash = _passwordHasher.HashPassword(user.PasswordHash);
+
+            user.CreatedAt = DateTime.Now;
+
             await _userRepository.CreateAsync(user);
         }
 
         public async Task UpdateAsync(User user)
         {
-            // Implementação futura: atualizar dados do usuário
-            throw new NotImplementedException();
+            await _userRepository.UpdateAsync(user);
         }
 
         public async Task DeleteAsync(Guid id)
         {
-            // Implementação futura: deletar usuário
-            throw new NotImplementedException();
+            await _userRepository.DeleteAsync(id);
         }
 
         public async Task<User?> GetByEmailAsync(string email)
         {
-            // Implementação futura: buscar usuário pelo email
-            throw new NotImplementedException();
+            return await _userRepository.GetByEmailAsync(email);
         }
     }
 }

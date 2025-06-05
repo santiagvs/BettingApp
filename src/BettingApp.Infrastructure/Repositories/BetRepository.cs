@@ -24,5 +24,24 @@ namespace BettingApp.Infrastructure.Repositories
                 bet
             );
         }
+
+        public async Task<IEnumerable<Bet>> GetAllAsync()
+        {
+            return await _connection.QueryAsync<Bet>("SELECT * FROM Bets");
+        }
+
+        public async Task UpdateAsync(Bet bet)
+        {
+            await _connection.ExecuteAsync(
+                @"UPDATE Bets SET UserId = @UserId, Amount = @Amount, BetDate = @BetDate, Event = @Event, Odds = @Odds, Status = @Status
+                WHERE Id = @Id",
+                bet);
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            await _connection.ExecuteAsync(
+                "DELETE FROM Bets WHERE Id = @Id", new { Id = id });
+        }
     }
 }
